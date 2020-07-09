@@ -1,0 +1,12 @@
+{
+    "autoload": {
+        "psr-4": {
+            "BeberAgua\\API\\": "src/"
+        }
+    },
+    "require": {
+        "ext-pdo": "*",
+        "firebase/php-jwt": "^5.2",
+        "coffeecode/router": "^1.0"
+    }
+}

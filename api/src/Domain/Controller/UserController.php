@@ -18,7 +18,7 @@ class UserController
     {
         $this->conn = Connection::connectDatabase();
         $this->repository = new PdoUserRepository($this->conn);
-        $expireTime = 300;
+        $expireTime = 30000000;
         $this->auth = new Authorization($expireTime);
     }
 
@@ -180,7 +180,7 @@ class UserController
     public function drinkWater(array $data)
     {
         $this->authenticate();
-        
+
         $request = json_decode(file_get_contents("php://input"));
         $id = intval($data["userid"]);
         $drink = floatval($request->drink_ml);

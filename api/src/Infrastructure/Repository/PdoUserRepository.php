@@ -17,6 +17,18 @@ class PdoUserRepository
 
     public function getAll(): array
     {
+        if ($_GET["page"] && $_GET["row_per_page"]) {
+            $page = $_GET["page"];
+            $rows = $_GET["row_per_page"];
+            $begin = ($page * $rows) - $rows;
+
+            $stmt = $this->conn->prepare('SELECT * from user LIMIT :begin, :rows;');
+            $stmt->bindValue(':begin', $begin, PDO::PARAM_INT);
+            $stmt->bindValue(':rows', $rows, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            return $this->hydrateUserList($stmt);
+        }
         $stmt = $this->conn->query('SELECT * from user;');
 
         return $this->hydrateUserList($stmt);

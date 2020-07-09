@@ -19,5 +19,7 @@ $router->put("/{userid}", "UserController:edit");
 $router->delete("/{userid}", "UserController:destroy");
 
 $router->post("/{userid}/drink", "UserController:drinkWater");
+$router->get("/{userid}/history", "UserController:history");
+$router->get("/ranking", "UserController:rankToday");
 
 $router->dispatch();

@@ -169,8 +169,59 @@ class PdoUserRepository
             "name" => $user['name'],
             "drink_counter" => $counter
         );
-    
     }
 
+    public function getHistory(int $id)
+    {
+        $user = $this->getById($id);
+
+        if (!$user) {
+            return false;
+        }
+
+        $query = 'SELECT * FROM drink WHERE id_user = ? ORDER BY drink_datetime DESC;';
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(1, $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $this->hydrateHistoryList($stmt);
+    }
+
+    private function hydrateHistoryList(\PDOStatement $stmt): array
+    {
+        $historyDataList = $stmt->fetchAll();
+        $historyList = [];
+        
+        foreach ($historyDataList as $historyData) {
+            $historyList[] = array(
+                "date" => $historyData['drink_datetime'],
+                "water_ml" => $historyData['drink_ml'],
+            );
+        }
+        return $historyList;
+    }
+
+    public function getRanking()
+    {
+        $query = "SELECT u.name, d.drink_ml FROM user AS u INNER JOIN drink AS d ON 
+        u.id_user = d.id_user WHERE DATE(d.drink_datetime) = CURDATE() ORDER BY d.drink_ml DESC;";
+        $stmt = $this->conn->query($query);
+
+        return $this->hydrateRankingList($stmt);
+    }
+
+    private function hydrateRankingList(\PDOStatement $stmt): array
+    {
+        $rankingDataList = $stmt->fetchAll();
+        $rankingList = [];
+        
+        foreach ($rankingDataList as $rankingData) {
+            $rankingList[] = array(
+                "name" => $rankingData['name'],
+                "water_ml" => $rankingData['drink_ml'],
+            );
+        }
+        return $rankingList;
+    }
 }
 

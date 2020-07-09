@@ -211,4 +211,30 @@ class UserController
             exit();
         }
     }
+
+    public function history(array $data): void
+    {
+        $this->authenticate();
+
+        $id = intval($data["userid"]);
+
+        $history = $this->repository->getHistory($id);
+
+        if (!$history) {
+            http_response_code(404);
+            echo json_encode(array("message" => "User not exist."));
+            return ;
+        }
+
+        http_response_code(200);
+        echo json_encode($history);
+    }
+
+    public function rankToday()
+    {
+        $ranking = $this->repository->getRanking();
+
+        http_response_code(200);
+        echo json_encode($ranking);
+    }
 }

@@ -1,0 +1,26 @@
+<?php
+
+namespace BeberAgua\API;
+
+use CoffeeCode\Router\Router;
+
+define("BASE_URL", "http://localhost:8080");
+$router = new Router(BASE_URL);
+
+$router->namespace("BeberAgua\API\Domain\Controller");
+
+$router->post("/login", "UserController:login");
+$router->post("/", function() {
+    echo json_encode(array("message" => "Teste"));
+});
+
+$router->group("users");
+$router->get("/{userid}", "UserController:show");
+$router->get("/", "UserController:index");
+$router->post("/", "UserController:signup");
+$router->put("/{userid}", "UserController:edit");
+$router->delete("/{userid}", "UserController:destroy");
+
+$router->post("/{userid}/drink", "UserController:drinkWater");
+
+$router->dispatch();

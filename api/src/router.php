@@ -10,9 +10,6 @@ $router = new Router(BASE_URL);
 $router->namespace("BeberAgua\API\Domain\Controller");
 
 $router->post("/login", "UserController:login");
-$router->post("/", function() {
-    echo json_encode(array("message" => "Teste"));
-});
 
 $router->group("users");
 $router->get("/{userid}", "UserController:show");

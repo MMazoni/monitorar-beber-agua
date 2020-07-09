@@ -15,7 +15,7 @@ class PdoUserRepository
         $this->conn = $connection;
     }
 
-    public function allUsers(): array
+    public function getAll(): array
     {
         $stmt = $this->conn->query('SELECT * from user;');
 
@@ -29,14 +29,13 @@ class PdoUserRepository
         $userList = [];
         
         foreach ($userDataList as $userData) {
-            $userList[] = new User(
-                $userData['id'],
-                $userData['name'],
-                $userData['email'],
-                $userData['password']
+            $userList[] = array(
+                "user_id" => $userData['id_user'],
+                "email" => $userData['email'],
+                "name" => $userData['name'],
+                "drink_counter" => $userData['drink_counter']
             );
         }
-        
         return $userList;
     }
     
@@ -46,8 +45,33 @@ class PdoUserRepository
         $stmt = $this->conn->prepare('SELECT * FROM user WHERE id_user = ?;');
         $stmt->bindValue(1, $id, PDO::PARAM_INT);
         $stmt->execute();
+        $userData = $stmt->fetch();
 
-        return $stmt->fetch();
+        if (!$userData) {
+            return [];
+        }
+
+        return array(
+            "user_id" => $userData["id_user"],
+            "name" => $userData['name'],
+            "email" => $userData['email'],
+            "drink_counter" => $userData['drink_counter']
+        );
+    }
+
+    public function getByEmail(string $email): array
+    {
+
+        $stmt = $this->conn->prepare('SELECT * FROM user WHERE email = :email;');
+        $stmt->bindValue(':email', $email);
+        $stmt->execute();
+        $userData = $stmt->fetch();
+
+        if (!$userData) {
+            return [];
+        }
+
+        return $userData;
     }
 
     public function save(User $user): bool
@@ -78,7 +102,7 @@ class PdoUserRepository
     
     private function update(User $user): bool
     {
-        $query = 'UPDATE user SET name = :name, email = :email, password = :password WHERE id = :id;';
+        $query = 'UPDATE user SET name = :name, email = :email, password = :password WHERE id_user = :id;';
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(':name', $user->name());
         $stmt->bindValue(':email', $user->email());
@@ -88,12 +112,52 @@ class PdoUserRepository
         return $stmt->execute();
     }
 
-    public function remove(User $user): bool
+    public function remove(int $id): bool
     {
-        $stmt = $this->conn->prepare('DELETE FROM user WHERE id = ?;');
-        $stmt->bindValue(1, $user->id(), PDO::PARAM_INT);
+        $user = $this->getById($id);
+
+        if (!$user) {
+            return false;
+        }
+
+        $stmt = $this->conn->prepare('DELETE FROM user WHERE id_user = ?;');
+        $stmt->bindValue(1, $id, PDO::PARAM_INT);
 
         return $stmt->execute();
+    }
+
+    public function drink(int $id, float $drink): array
+    {
+        $user = $this->getById($id);
+
+        if (!$user) {
+            return false;
+        }
+
+        $counter = $user["drink_counter"] + 1;
+        $query = 'UPDATE user SET drink_counter = :counter WHERE id_user = :id;';
+        $firstStmt = $this->conn->prepare($query);
+        $firstStmt->bindValue(':counter', $counter, PDO::PARAM_INT);
+        $firstStmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $success[] = $firstStmt->execute();
+
+        $query = 'INSERT INTO drink (id_user, drink_ml) VALUES (:id, :drink);';
+        $secondStmt = $this->conn->prepare($query);
+        $secondStmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $secondStmt->bindValue(':drink', $drink);
+        $success[] = $secondStmt->execute();
+        
+        if (!$success[0] || !$success[1]) {
+            return [];
+        }
+        
+        return array(
+            "user_id" => $id,
+            "email" => $user['email'],
+            "name" => $user['name'],
+            "drink_counter" => $counter
+        );
+    
     }
 
 }

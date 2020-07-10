@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS `drink` (
   PRIMARY KEY (`id_drink`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-alter table drink
-	add foreign key (id_user)
-	references `user`(id_user);
+ALTER TABLE drink
+	add FOREIGN KEY (id_user)
+	REFERENCES `user`(id_user)
+  ON DELETE CASCADE;
 	

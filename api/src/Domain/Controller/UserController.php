@@ -48,7 +48,7 @@ class UserController
         }
 
         http_response_code(200);
-
+        $this->auth->setUserId($user['id_user']);
         $jwt = $this->auth->token();
         echo json_encode(
             array(
@@ -77,13 +77,7 @@ class UserController
             return;
         }
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            http_response_code(422);
-            echo json_encode(
-                array("message" => "Email {$email} is not valid.")
-            );
-            return;
-        }
+        $this->validateEmail($email);
 
         $user = $this->repository->getByEmail($email);
 
@@ -92,7 +86,7 @@ class UserController
             echo json_encode(
                 array("message" => "Email already exists.")
             );
-            return;
+            exit();
         }
 
         $newUser = new User(null, $name, $email, $password);
@@ -140,9 +134,15 @@ class UserController
 
     public function edit(array $data): void
     {
-        $this->authenticate();
-
         $id = intval($data["userid"]);
+
+        $jwt = $this->authenticate();
+
+        if ($id != $jwt->user_id) {
+            http_response_code(404);
+            echo json_encode(array("message" => "This id does not belongs to your user."));
+            return;
+        }
 
         $user = $this->repository->getById($id);
 
@@ -153,9 +153,21 @@ class UserController
         }
         $request = json_decode(file_get_contents("php://input"));
 
-        $name = $request->name;
+        $name = filter_var($request->name, FILTER_SANITIZE_STRING);
         $email = $request->email;
         $password = $request->password;
+
+        $this->validateEmail($email);
+
+        $user = $this->repository->getByEmail($email);
+
+        if (isset($user) && $email == $user['email'] && $user['id_user'] != $id) {
+            http_response_code(409);
+            echo json_encode(
+                array("message" => "Email already exists.")
+            );
+            exit();
+        }
 
         $updatedUser = new User($id, $name, $email, $password);
 
@@ -175,9 +187,15 @@ class UserController
 
     public function destroy(array $data)
     {
-        $this->authenticate();
+        $jwt = $this->authenticate();
 
         $id = intval($data["userid"]);
+
+        if ($id != $jwt->user_id) {
+            http_response_code(404);
+            echo json_encode(array("message" => "This id does not belongs to your user."));
+            return;
+        }
 
         $success = $this->repository->remove($id);
 
@@ -195,10 +213,16 @@ class UserController
 
     public function drinkWater(array $data)
     {
-        $this->authenticate();
+        $jwt = $this->authenticate();
+        $id = intval($data["userid"]);
+
+        if ($id != $jwt->user_id) {
+            http_response_code(404);
+            echo json_encode(array("message" => "This id does not belongs to your user."));
+            return;
+        }
 
         $request = json_decode(file_get_contents("php://input"));
-        $id = intval($data["userid"]);
         $drink = $request->drink_ml;
         $search = ',';
         $replace = '.';
@@ -217,7 +241,7 @@ class UserController
         echo json_encode($user);
     }
 
-    private function authenticate(): void
+    private function authenticate()
     {
         $jwt = $this->auth->tokenFromHeaders();
         $decodedOrError = $this->auth->decode($jwt);
@@ -230,6 +254,7 @@ class UserController
             ));
             exit();
         }
+        return $decodedOrError;
     }
 
     public function history(array $data): void
@@ -256,5 +281,16 @@ class UserController
 
         http_response_code(200);
         echo json_encode($ranking);
+    }
+
+    private function validateEmail($email)
+    {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            http_response_code(422);
+            echo json_encode(
+                array("message" => "Email {$email} is not valid.")
+            );
+            exit();
+        }
     }
 }

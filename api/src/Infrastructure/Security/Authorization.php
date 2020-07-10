@@ -7,6 +7,7 @@ use Firebase\JWT\JWT;
 class Authorization
 {
     private $key;
+    private $user_id;
     private $issuer_claim;
     private $audience_claim;
     private $issuedat_claim;
@@ -24,6 +25,11 @@ class Authorization
         $this->expire_claim = $this->issuedat_claim + $secondsToExpire;
     }
 
+    public function setUserId(int $id)
+    {
+        $this->user_id = $id;
+    }
+
     private function payload(): array
     {
         return array(
@@ -32,6 +38,7 @@ class Authorization
             "iat" => $this->issuedat_claim,
             "nbf" => $this->notbefore_claim,
             "exp" => $this->expire_claim,
+            "user_id" => $this->user_id
         );
     }
 
@@ -55,4 +62,5 @@ class Authorization
         $token = explode(" ", $authHeader);
         return $token[1];
     }
+
 }

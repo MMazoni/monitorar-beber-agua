@@ -3,6 +3,7 @@
 namespace BeberAgua\API\Infrastructure\Repository;
 
 use BeberAgua\API\Domain\Model\User;
+use BeberAgua\API\Domain\Helper\Hydrate;
 use PDO;
 
 class PdoUserRepository
@@ -27,27 +28,11 @@ class PdoUserRepository
             $stmt->bindValue(':rows', $rows, PDO::PARAM_INT);
             $stmt->execute();
 
-            return $this->hydrateUserList($stmt);
+            return Hydrate::hydrateUserList($stmt);
         }
         $stmt = $this->conn->query('SELECT * from user;');
 
-        return $this->hydrateUserList($stmt);
-    }
-
-    private function hydrateUserList(\PDOStatement $stmt): array
-    {
-        $userDataList = $stmt->fetchAll();
-        $userList = [];
-
-        foreach ($userDataList as $userData) {
-            $userList[] = array(
-                "user_id" => $userData['id_user'],
-                "email" => $userData['email'],
-                "name" => $userData['name'],
-                "drink_counter" => $userData['drink_counter'],
-            );
-        }
-        return $userList;
+        return Hydrate::hydrateUserList($stmt);
     }
 
     public function getById(int $id): array
@@ -183,21 +168,7 @@ class PdoUserRepository
         $stmt->bindValue(1, $id, PDO::PARAM_INT);
         $stmt->execute();
 
-        return $this->hydrateHistoryList($stmt);
-    }
-
-    private function hydrateHistoryList(\PDOStatement $stmt): array
-    {
-        $historyDataList = $stmt->fetchAll();
-        $historyList = [];
-
-        foreach ($historyDataList as $historyData) {
-            $historyList[] = array(
-                "date" => $historyData['drink_datetime'],
-                "water_ml" => $historyData['drink_ml'],
-            );
-        }
-        return $historyList;
+        return Hydrate::hydrateHistoryList($stmt);
     }
 
     public function getRanking()
@@ -207,20 +178,6 @@ class PdoUserRepository
             GROUP BY u.name ORDER BY SUM(d.drink_ml) DESC;";
         $stmt = $this->conn->query($query);
 
-        return $this->hydrateRankingList($stmt);
-    }
-
-    private function hydrateRankingList(\PDOStatement $stmt): array
-    {
-        $rankingDataList = $stmt->fetchAll();
-        $rankingList = [];
-
-        foreach ($rankingDataList as $rankingData) {
-            $rankingList[] = array(
-                "name" => $rankingData['name'],
-                "water_ml" => number_format($rankingData['SUM(d.drink_ml)'], 2, ",", "."),
-            );
-        }
-        return $rankingList;
+        return Hydrate::hydrateRankingList($stmt);
     }
 }

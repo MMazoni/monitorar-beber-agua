@@ -65,9 +65,25 @@ class UserController
     {
         $request = json_decode(file_get_contents("php://input"));
 
-        $name = $request->name;
+        $name = filter_var($request->name, FILTER_SANITIZE_STRING);
         $email = $request->email;
         $password = $request->password;
+
+        if (empty($name) || empty($email) || empty($password)) {
+            http_response_code(400);
+            echo json_encode(
+                array("message" => "It is necessary to fill all the fields.")
+            );
+            return;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            http_response_code(422);
+            echo json_encode(
+                array("message" => "Email {$email} is not valid.")
+            );
+            return;
+        }
 
         $user = $this->repository->getByEmail($email);
 
@@ -79,9 +95,9 @@ class UserController
             return;
         }
 
-        $new_user = new User(null, $name, $email, $password);
+        $newUser = new User(null, $name, $email, $password);
 
-        $success = $this->repository->save($new_user);
+        $success = $this->repository->save($newUser);
 
         if (!$success) {
             http_response_code(400);
@@ -141,9 +157,9 @@ class UserController
         $email = $request->email;
         $password = $request->password;
 
-        $updated_user = new User($id, $name, $email, $password);
+        $updatedUser = new User($id, $name, $email, $password);
 
-        $success = $this->repository->save($updated_user);
+        $success = $this->repository->save($updatedUser);
 
         if (!$success) {
             http_response_code(400);
@@ -183,9 +199,13 @@ class UserController
 
         $request = json_decode(file_get_contents("php://input"));
         $id = intval($data["userid"]);
-        $drink = floatval($request->drink_ml);
+        $drink = $request->drink_ml;
+        $search = ',';
+        $replace = '.';
+        $count = 1;
+        $formattedQuantity = floatval(str_replace($search, $replace, $drink, $count));       
 
-        $user = $this->repository->drink($id, $drink);
+        $user = $this->repository->drink($id, $formattedQuantity);
 
         if (!$user) {
             http_response_code(404);

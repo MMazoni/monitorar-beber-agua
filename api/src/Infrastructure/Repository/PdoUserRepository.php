@@ -202,8 +202,9 @@ class PdoUserRepository
 
     public function getRanking()
     {
-        $query = "SELECT u.name, d.drink_ml FROM user AS u INNER JOIN drink AS d ON
-        u.id_user = d.id_user WHERE DATE(d.drink_datetime) = CURDATE() ORDER BY d.drink_ml DESC;";
+        $query = "SELECT u.name, SUM(d.drink_ml) FROM user AS u INNER JOIN drink AS d ON 
+            u.id_user = d.id_user WHERE DATE(d.drink_datetime) = CURDATE() 
+            GROUP BY u.name ORDER BY SUM(d.drink_ml) DESC;";
         $stmt = $this->conn->query($query);
 
         return $this->hydrateRankingList($stmt);
@@ -217,7 +218,7 @@ class PdoUserRepository
         foreach ($rankingDataList as $rankingData) {
             $rankingList[] = array(
                 "name" => $rankingData['name'],
-                "water_ml" => $rankingData['drink_ml'],
+                "water_ml" => number_format($rankingData['SUM(d.drink_ml)'], 2, ",", "."),
             );
         }
         return $rankingList;

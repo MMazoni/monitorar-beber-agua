@@ -227,7 +227,7 @@ class UserController
         $search = ',';
         $replace = '.';
         $count = 1;
-        $formattedQuantity = floatval(str_replace($search, $replace, $drink, $count));       
+        $formattedQuantity = floatval(str_replace($search, $replace, $drink, $count));
 
         $user = $this->repository->drink($id, $formattedQuantity);
 

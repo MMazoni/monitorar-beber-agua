@@ -13,7 +13,6 @@ class Authorization
     private $issuedat_claim;
     private $notbefore_claim;
     private $expire_claim;
-        
 
     public function __construct(int $secondsToExpire)
     {
@@ -38,7 +37,7 @@ class Authorization
             "iat" => $this->issuedat_claim,
             "nbf" => $this->notbefore_claim,
             "exp" => $this->expire_claim,
-            "user_id" => $this->user_id
+            "user_id" => $this->user_id,
         );
     }
 

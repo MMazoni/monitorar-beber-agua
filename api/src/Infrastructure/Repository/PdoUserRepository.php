@@ -2,8 +2,8 @@
 
 namespace BeberAgua\API\Infrastructure\Repository;
 
-use BeberAgua\API\Domain\Model\User;
 use BeberAgua\API\Domain\Helper\Hydrate;
+use BeberAgua\API\Domain\Model\User;
 use PDO;
 
 class PdoUserRepository
@@ -173,8 +173,8 @@ class PdoUserRepository
 
     public function getRanking()
     {
-        $query = "SELECT u.name, SUM(d.drink_ml) FROM user AS u INNER JOIN drink AS d ON 
-            u.id_user = d.id_user WHERE DATE(d.drink_datetime) = CURDATE() 
+        $query = "SELECT u.name, SUM(d.drink_ml) FROM user AS u INNER JOIN drink AS d ON
+            u.id_user = d.id_user WHERE DATE(d.drink_datetime) = CURDATE()
             GROUP BY u.name ORDER BY SUM(d.drink_ml) DESC;";
         $stmt = $this->conn->query($query);
 

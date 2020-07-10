@@ -2,7 +2,6 @@
 
 namespace BeberAgua\API\Domain\Model;
 
-
 class Drink
 {
     private ?int $id;

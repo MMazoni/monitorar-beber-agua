@@ -2,8 +2,8 @@
 
 namespace BeberAgua\API\Infrastructure\Repository;
 
-use PDO;
 use BeberAgua\API\Domain\Model\User;
+use PDO;
 
 class PdoUserRepository
 {
@@ -26,7 +26,7 @@ class PdoUserRepository
             $stmt->bindValue(':begin', $begin, PDO::PARAM_INT);
             $stmt->bindValue(':rows', $rows, PDO::PARAM_INT);
             $stmt->execute();
-            
+
             return $this->hydrateUserList($stmt);
         }
         $stmt = $this->conn->query('SELECT * from user;');
@@ -34,23 +34,22 @@ class PdoUserRepository
         return $this->hydrateUserList($stmt);
     }
 
-    
     private function hydrateUserList(\PDOStatement $stmt): array
     {
         $userDataList = $stmt->fetchAll();
         $userList = [];
-        
+
         foreach ($userDataList as $userData) {
             $userList[] = array(
                 "user_id" => $userData['id_user'],
                 "email" => $userData['email'],
                 "name" => $userData['name'],
-                "drink_counter" => $userData['drink_counter']
+                "drink_counter" => $userData['drink_counter'],
             );
         }
         return $userList;
     }
-    
+
     public function getById(int $id): array
     {
 
@@ -67,7 +66,7 @@ class PdoUserRepository
             "user_id" => $userData["id_user"],
             "name" => $userData['name'],
             "email" => $userData['email'],
-            "drink_counter" => $userData['drink_counter']
+            "drink_counter" => $userData['drink_counter'],
         );
     }
 
@@ -102,7 +101,7 @@ class PdoUserRepository
         $success = $stmt->execute([
             ':name' => $user->name(),
             ':email' => $user->email(),
-            ':password' => $user->hashPassword()
+            ':password' => $user->hashPassword(),
         ]);
 
         if ($success) {
@@ -111,7 +110,7 @@ class PdoUserRepository
 
         return $success;
     }
-    
+
     private function update(User $user): bool
     {
         $query = 'UPDATE user SET name = :name, email = :email, password = :password WHERE id_user = :id;';
@@ -158,16 +157,16 @@ class PdoUserRepository
         $secondStmt->bindValue(':id', $id, PDO::PARAM_INT);
         $secondStmt->bindValue(':drink', $drink);
         $success[] = $secondStmt->execute();
-        
+
         if (!$success[0] || !$success[1]) {
             return [];
         }
-        
+
         return array(
             "user_id" => $id,
             "email" => $user['email'],
             "name" => $user['name'],
-            "drink_counter" => $counter
+            "drink_counter" => $counter,
         );
     }
 
@@ -191,7 +190,7 @@ class PdoUserRepository
     {
         $historyDataList = $stmt->fetchAll();
         $historyList = [];
-        
+
         foreach ($historyDataList as $historyData) {
             $historyList[] = array(
                 "date" => $historyData['drink_datetime'],
@@ -203,7 +202,7 @@ class PdoUserRepository
 
     public function getRanking()
     {
-        $query = "SELECT u.name, d.drink_ml FROM user AS u INNER JOIN drink AS d ON 
+        $query = "SELECT u.name, d.drink_ml FROM user AS u INNER JOIN drink AS d ON
         u.id_user = d.id_user WHERE DATE(d.drink_datetime) = CURDATE() ORDER BY d.drink_ml DESC;";
         $stmt = $this->conn->query($query);
 
@@ -214,7 +213,7 @@ class PdoUserRepository
     {
         $rankingDataList = $stmt->fetchAll();
         $rankingList = [];
-        
+
         foreach ($rankingDataList as $rankingData) {
             $rankingList[] = array(
                 "name" => $rankingData['name'],
@@ -224,4 +223,3 @@ class PdoUserRepository
         return $rankingList;
     }
 }
-

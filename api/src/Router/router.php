@@ -1,7 +1,5 @@
 <?php
 
-namespace BeberAgua\API;
-
 use CoffeeCode\Router\Router;
 
 define("BASE_URL", "http://localhost:8080");

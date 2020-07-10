@@ -10,8 +10,6 @@ class User
     private string $name;
     private string $email;
     private string $password;
-    /** @var Drink[] */
-    private array $drinks;
 
     public function __construct(?int $id, string $name, string $email, string $password)
     {
@@ -48,16 +46,5 @@ class User
     public function email(): string
     {
         return $this->email;
-    }
-
-    public function addDrinkWater(?int $id, float $quantity_ml, string $datetime): void
-    {
-        $this->drinks[] = new Drink($id, $quantity_ml, $datetime);
-    }
-
-    /** @return Drink[] */
-    public function drink(): array
-    {
-        return $this->drinks;
     }
 }

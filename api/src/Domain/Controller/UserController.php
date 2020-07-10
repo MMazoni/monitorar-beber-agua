@@ -4,8 +4,8 @@ namespace BeberAgua\API\Domain\Controller;
 
 use BeberAgua\API\Domain\Model\User;
 use BeberAgua\API\Infrastructure\Persistence\Connection;
-use BeberAgua\API\Infrastructure\Security\Authorization;
 use BeberAgua\API\Infrastructure\Repository\PdoUserRepository;
+use BeberAgua\API\Infrastructure\Security\Authorization;
 
 class UserController
 {
@@ -36,7 +36,7 @@ class UserController
             echo json_encode(
                 array("message" => "Email is not registered.")
             );
-            return ;
+            return;
         }
 
         if (!password_verify($password, $user['password'])) {
@@ -46,7 +46,7 @@ class UserController
             );
             return;
         }
-        
+
         http_response_code(200);
 
         $jwt = $this->auth->token();
@@ -56,7 +56,7 @@ class UserController
                 "user_id" => $user['id_user'],
                 "email" => $user['email'],
                 "name" => $user['name'],
-                "drink_counter" => $user['drink_counter']
+                "drink_counter" => $user['drink_counter'],
             )
         );
     }
@@ -76,7 +76,7 @@ class UserController
             echo json_encode(
                 array("message" => "Email already exists.")
             );
-            return ;
+            return;
         }
 
         $new_user = new User(null, $name, $email, $password);
@@ -86,8 +86,8 @@ class UserController
         if (!$success) {
             http_response_code(400);
             echo json_encode(array("message" => "User could not be created."));
-            return ;
-        } 
+            return;
+        }
 
         http_response_code(201);
         echo json_encode(
@@ -98,7 +98,7 @@ class UserController
     public function show(array $data): void
     {
         $this->authenticate();
-         
+
         $id = intval($data["userid"]);
 
         $user = $this->repository->getById($id);
@@ -109,7 +109,7 @@ class UserController
         }
 
         http_response_code(200);
-        echo json_encode($user);      
+        echo json_encode($user);
     }
 
     public function index(): void
@@ -133,7 +133,7 @@ class UserController
         if (!$user) {
             http_response_code(404);
             echo json_encode(array("message" => "User not exist."));
-            return ;
+            return;
         }
         $request = json_decode(file_get_contents("php://input"));
 
@@ -148,9 +148,9 @@ class UserController
         if (!$success) {
             http_response_code(400);
             echo json_encode(array("message" => "User could not be updated."));
-            return ;
-        } 
-        
+            return;
+        }
+
         http_response_code(201);
         echo json_encode(
             array("message" => "User updated successfully.")
@@ -168,7 +168,7 @@ class UserController
         if (!$success) {
             http_response_code(400);
             echo json_encode(array("message" => "User could not be deleted."));
-            return ;
+            return;
         }
 
         http_response_code(204);
@@ -190,7 +190,7 @@ class UserController
         if (!$user) {
             http_response_code(404);
             echo json_encode(array("message" => "Operation failed."));
-            return ;
+            return;
         }
 
         http_response_code(200);
@@ -223,7 +223,7 @@ class UserController
         if (!$history) {
             http_response_code(404);
             echo json_encode(array("message" => "User not exist."));
-            return ;
+            return;
         }
 
         http_response_code(200);

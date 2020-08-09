@@ -17,20 +17,19 @@ Um API criada para um aplicativo pessoal para monitorar quantas vezes o usuário
 
 ## Instalação
 
-Entre na pasta `api` do projeto e dê o seguinte comando.
+Na pasta do projeto, utilize os comandos abaixo:
 
 ```
 composer install
-composer dumpautoload
 ```
 
-Volte para a raiz do projeto para subir os containers docker:
+Para subir o container docker:
 
 ```
-docker-composer up --build
+docker-composer up
 ```
 
-Agora para acessar o servidor apache, digite a url:
+Agora para acessar a `api`, utilize a url:
 
 ```
 localhost:8080

@@ -9,14 +9,16 @@ class Connection
 {
     public static function connectDatabase()
     {
-        $servername = "mysql";
-        $port = "3306";
-        $username = "root";
-        $password = "monitoramento";
-        $dbname = "monitoramento_agua";
+        $url = getenv('JAWSDB_URL');
+        $dbparts = parse_url($url);
+
+        $hostname = $dbparts['host'];
+        $username = $dbparts['user'];
+        $password = $dbparts['pass'];
+        $database = ltrim($dbparts['path'],'/');
 
         try {
-            $conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password);
+            $conn = new PDO("mysql:host=$hostname;dbname=$database", $username, $password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             return $conn;

@@ -22,6 +22,38 @@ class UserController
         $this->auth = new Authorization($expireTime);
     }
 
+
+    /**
+    * @OA\Post(
+    *       path="/login",
+    *       operationId="login",
+    *       tags={"User"},
+    *       summary="Authentication",
+    *       description="If the email and password are correct, it authenticates.",
+    *       @OA\RequestBody(
+    *           description="User email and password.",
+    *           required=true,
+    *           @OA\MediaType(
+    *               mediaType="application/json",
+    *               @OA\JsonContent(ref="#/components/schemas/User")
+    *           ),
+    *       ),
+    *       @OA\Response(
+    *           response=200,
+    *           description="Successful operation",
+    *           @OA\Property(property="token", type="string"),
+    *           @OA\JsonContent(ref="#/components/schemas/User")
+    *       ),
+    *       @OA\Response(
+    *           response=404,
+    *           description="Email is not registered."
+    *       ),
+    *       @OA\Response(
+    *           response=404,
+    *           description="Password is not correct."
+    *       )   
+    * )
+    */
     public function login()
     {
         $request = json_decode(file_get_contents("php://input"));

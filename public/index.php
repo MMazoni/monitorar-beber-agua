@@ -2,6 +2,21 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+use OpenApi\Annotations as OA;
+
+/**
+ * @OA\Info(
+ *   title="API Beber Água",
+ *   version="1.0.0",
+ *   @OA\Contact(
+ *    email="matheus.andrade16@fatec.sp.gov.br",
+ *    name="Matheus Mazoni"
+ *   )
+ * ),
+ * @OA\Server(
+ *  url="https://monitorar-agua.herokuapp.com/"
+ * ),
+ */
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");

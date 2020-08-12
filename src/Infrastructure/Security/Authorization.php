@@ -16,7 +16,7 @@ class Authorization
 
     public function __construct(int $secondsToExpire)
     {
-        $this->key = "&vfDr9hje6Xa8euk^Ben";
+        $this->key = getenv('KEY');
         $this->issuer_claim = "http://example.org";
         $this->audience_claim = "http://example.com";
         $this->issuedat_claim = time();

@@ -43,7 +43,7 @@ class UserController
     *               @OA\Property(
     *                   property="password",
     *                   description="User password",
-    *                   format="email",
+    *                   format="password",
     *                   type="string",
     *               ),
     *           ),

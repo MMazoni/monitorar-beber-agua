@@ -4,10 +4,6 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use OpenApi\Annotations as OA;
 
-$openapi = \OpenApi\scan(__DIR__ . "../src/");
-header('Content-Type: application/x-yaml');
-echo $openapi->toYaml();
-
 /**
  *  @OA\Info(
  *      title="API Beber Água",
@@ -27,5 +23,8 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+echo "Monitorar Beber água API" . PHP_EOL;
+echo "Para acessar documentação: http://monitorar-agua.herokuapp.com/swagger/";
 
 require __DIR__ . '/../src/Router/router.php';

@@ -24,35 +24,40 @@ class UserController
 
 
     /**
-    * @OA\Post(
+    *   @OA\Post(
     *       path="/login",
     *       operationId="login",
-    *       tags={"User"},
-    *       summary="Authentication",
+    *       tags={"users"},
+    *       summary="JWT Login",
     *       description="If the email and password are correct, it authenticates.",
     *       @OA\RequestBody(
     *           description="User email and password.",
     *           required=true,
-    *           @OA\MediaType(
-    *               mediaType="application/json",
-    *               @OA\JsonContent(ref="#/components/schemas/User")
+    *           @OA\JsonContent(
+    *               @OA\Property(
+    *                   property="email",
+    *                   description="User email",
+    *                   format="email",
+    *                   type="string",
+    *               ),
+    *               @OA\Property(
+    *                   property="password",
+    *                   description="User password",
+    *                   format="email",
+    *                   type="string",
+    *               ),
     *           ),
     *       ),
     *       @OA\Response(
     *           response=200,
     *           description="Successful operation",
-    *           @OA\Property(property="token", type="string"),
     *           @OA\JsonContent(ref="#/components/schemas/User")
     *       ),
     *       @OA\Response(
     *           response=404,
-    *           description="Email is not registered."
-    *       ),
-    *       @OA\Response(
-    *           response=404,
-    *           description="Password is not correct."
-    *       )   
-    * )
+    *           description="Resource not found."
+    *       )
+    *   )
     */
     public function login()
     {

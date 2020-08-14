@@ -9,8 +9,25 @@ use OpenApi\Annotations as OA;
  */
 class User
 {
+    /**
+     *  The user id
+     *  @var int
+     *  @OA\Property()
+     */
     private ?int $id;
+
+    /**
+     *  The user name
+     *  @var string
+     *  @OA\Property()
+     */
     private string $name;
+    
+    /**
+     *  The user email
+     *  @var string
+     *  @OA\Property()
+     */
     private string $email;
     private string $password;
 
@@ -31,21 +48,11 @@ class User
         $this->id = $id;
     }
 
-    /**
-     *  The user id
-     *  @var int
-     *  @OA\Property()
-     */
     public function id(): ?int
     {
         return $this->id;
     }
 
-    /**
-     *  The user name
-     *  @var string
-     *  @OA\Property()
-     */
     public function name(): string
     {
         return $this->name;
@@ -56,11 +63,6 @@ class User
         return password_hash($this->password, PASSWORD_ARGON2I);
     }
 
-    /**
-     *  The user email
-     *  @var string
-     *  @OA\Property()
-     */
     public function email(): string
     {
         return $this->email;

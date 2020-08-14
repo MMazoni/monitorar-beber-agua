@@ -4,18 +4,22 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use OpenApi\Annotations as OA;
 
+$openapi = \OpenApi\scan(__DIR__ . "../src/");
+header('Content-Type: application/x-yaml');
+echo $openapi->toYaml();
+
 /**
- * @OA\Info(
- *   title="API Beber Água",
- *   version="1.0.0",
- *   @OA\Contact(
- *    email="matheus.andrade16@fatec.sp.gov.br",
- *    name="Matheus Mazoni"
- *   )
- * ),
- * @OA\Server(
- *  url="https://monitorar-agua.herokuapp.com/"
- * ),
+ *  @OA\Info(
+ *      title="API Beber Água",
+ *      version="1.0.0",
+ *      @OA\Contact(
+ *          email="matheus.andrade16@fatec.sp.gov.br",
+ *          name="Matheus Mazoni"
+ *      )
+ *  ),
+ *  @OA\Server(
+ *      url="https://monitorar-agua.herokuapp.com/"
+ *  ),
  */
 
 header("Access-Control-Allow-Origin: *");

@@ -1,0 +1,61 @@
+openapi: 3.0.0
+info:
+  title: 'API Beber Água'
+  contact:
+    name: 'Matheus Mazoni'
+    email: matheus.andrade16@fatec.sp.gov.br
+  version: 1.0.0
+servers:
+  -
+    url: 'https://monitorar-agua.herokuapp.com/'
+paths:
+  /login:
+    post:
+      tags:
+        - users
+      summary: 'JWT Login'
+      description: 'If the email and password are correct, it authenticates.'
+      operationId: login
+      requestBody:
+        description: 'User email and password.'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  description: 'User email'
+                  type: string
+                  format: email
+                password:
+                  description: 'User password'
+                  type: string
+                  format: email
+              type: object
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: 'Resource not found.'
+components:
+  schemas:
+    User:
+      properties:
+        id:
+          description: 'The user id'
+          type: integer
+          nullable: true
+        name:
+          description: 'The user name'
+          type: string
+        email:
+          description: 'The user email'
+          type: string
+        drink_counter:
+          description: 'Number of drinks through the day.'
+          type: int
+      type: object

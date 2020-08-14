@@ -9,12 +9,15 @@ use OpenApi\Annotations as OA;
  */
 class User
 {
-    /**
-     *  The user id
-     *  @var int
-     *  @OA\Property()
-     */
     private ?int $id;
+    /**
+     *  @var int
+     *  @OA\Property(
+     *      property="id",
+     *      type="integer",
+     *      description="User ID"
+     *  )
+     */
 
     /**
      *  The user name
@@ -72,7 +75,7 @@ class User
      *  @var int
      *  @OA\Property(
      *      property="drink_counter",
-     *      type="int",
+     *      type="integer",
      *      description="Number of drinks through the day."
      *  )
      */

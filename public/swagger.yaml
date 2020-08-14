@@ -30,7 +30,7 @@ paths:
                 password:
                   description: 'User password'
                   type: string
-                  format: email
+                  format: password
               type: object
       responses:
         '200':
@@ -46,9 +46,8 @@ components:
     User:
       properties:
         id:
-          description: 'The user id'
+          description: 'User ID'
           type: integer
-          nullable: true
         name:
           description: 'The user name'
           type: string
@@ -57,5 +56,5 @@ components:
           type: string
         drink_counter:
           description: 'Number of drinks through the day.'
-          type: int
+          type: integer
       type: object

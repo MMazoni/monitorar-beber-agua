@@ -41,6 +41,59 @@ paths:
                 $ref: '#/components/schemas/User'
         '404':
           description: 'Resource not found.'
+  /users:
+    post:
+      tags:
+        - users
+      summary: 'Register a user'
+      operationId: signup
+      requestBody:
+        description: 'User information.'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  description: 'User email'
+                  type: string
+                  format: email
+                name:
+                  description: 'User name'
+                  type: string
+                password:
+                  description: 'User password'
+                  type: string
+                  format: password
+              type: object
+      responses:
+        '201':
+          description: 'Successful operation'
+        '400':
+          description: 'User could not be created.'
+        '409':
+          description: 'Email already exists.'
+  '/users/{id}':
+    get:
+      tags:
+        - users
+      summary: 'Get a user.'
+      operationId: show
+      parameters:
+        -
+          name: id
+          in: query
+          description: 'The user ID'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
 components:
   schemas:
     User:

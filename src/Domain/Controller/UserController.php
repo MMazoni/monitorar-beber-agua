@@ -98,6 +98,49 @@ class UserController
         );
     }
 
+    /**
+     *  @OA\Post(
+     *      path="/users",
+     *      operationId="signup",
+     *      tags={"users"},
+     *      summary="Register a user",
+     *      @OA\RequestBody(
+     *          description="User information.",
+     *          required=true,
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="email",
+     *                  description="User email",
+     *                  format="email",
+     *                  type="string",
+     *              ),
+     *              @OA\Property(
+     *                  property="name",
+     *                  description="User name",    
+     *                  type="string",
+     *              ),
+     *              @OA\Property(
+     *                  property="password",
+     *                  description="User password",
+     *                  format="password",
+     *                  type="string",
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation"
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="User could not be created."
+     *      ),
+     *      @OA\Response(
+     *          response=409,
+     *          description="Email already exists."
+     *      )
+     *  )
+     */
     public function signup(): void
     {
         $request = json_decode(file_get_contents("php://input"));
@@ -142,6 +185,26 @@ class UserController
         );
     }
 
+    /**
+     *  @OA\Get(
+     *      path="/users/{id}",
+     *      operationId="show",
+     *      tags={"users"},
+     *      summary="Get a user.",
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="query",
+     *          required=true,
+     *          description="The user ID",
+     *          @OA\Schema(type="string")
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="#/components/schemas/User")
+     *      ),
+     *  )
+     */
     public function show(array $data): void
     {
         $this->authenticate();
@@ -159,6 +222,24 @@ class UserController
         echo json_encode($user);
     }
 
+    /**
+     *  @OA\Get(
+     *      path="/users",
+     *      operationId="index",
+     *      tags={"users"},
+     *      summary="Get all users.",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              type="array",
+     *              @OA\Items(
+     *                  ref="#/components/schemas/User"
+     *              )
+     *          )
+     *      ),
+     *  )
+     */
     public function index(): void
     {
         $this->authenticate();

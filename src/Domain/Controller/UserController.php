@@ -222,6 +222,24 @@ class UserController
         echo json_encode($user);
     }
 
+    /**
+     *  @OA\Get(
+     *      path="/users",
+     *      operationId="index",
+     *      tags={"users"},
+     *      summary="Get all users.",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              type="array",
+     *              @OA\Items(
+     *                  ref="#/components/schemas/User"
+     *              )
+     *          )
+     *      ),
+     *  )
+     */
     public function index(): void
     {
         $this->authenticate();

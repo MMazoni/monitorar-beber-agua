@@ -1,0 +1,21 @@
+name: Build PHPCodeSniffer
+
+on: pull_request
+
+jobs:
+  runPHPCSInspection:
+    name: Run PHPCS inspection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Install PHP_CodeSniffer
+        run: |
+          curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+          php phpcs.phar --version
+      - name: Run PHPCS inspection
+        uses: rtCamp/action-phpcs-code-review@v2
+        env:
+          GH_BOT_TOKEN: ${{ secrets.SNIFFER_PERSONAL_TOKEN }}
+          PHPCS_STANDARD_FILE_NAME: "dev/ruleset.xml"

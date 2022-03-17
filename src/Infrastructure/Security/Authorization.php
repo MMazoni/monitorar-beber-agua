@@ -55,8 +55,7 @@ class Authorization
         }
     }
 
-    public function tokenFromHeaders()
-    {
+    public function tokenFromHeaders() {
         $authHeader = apache_request_headers()["Authorization"];
         $token = explode(" ", $authHeader);
         return $token[1];

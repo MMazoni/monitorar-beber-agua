@@ -8,7 +8,7 @@ use PDOException;
 class Connection
 {
     public static function connectDatabase()
-    {
+{
         $servername = "mysql";
         $port = "3306";
         $username = "root";

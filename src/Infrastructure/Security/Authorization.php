@@ -25,7 +25,7 @@ class Authorization
     }
 
     public function setUserId(int $id)
-    {
+        {
         $this->user_id = $id;
     }
 

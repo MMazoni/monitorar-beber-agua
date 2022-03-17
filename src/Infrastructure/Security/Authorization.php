@@ -41,7 +41,7 @@ class Authorization
         );
     }
 
-    public function token()
+    function token()
     {
                 return JWT::encode($this->payload(), $this->key)
                 ;

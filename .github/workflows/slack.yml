@@ -1,0 +1,25 @@
+name: Slack message
+
+on: [push]
+
+jobs:
+  notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: notify slack channel
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: repo,ref,commit,author
+          custom_payload: |
+            {
+              attachments: [{
+                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+                text: `${process.env.AS_REPO} | ${process.env.AS_COMMIT} \nby ${process.env.AS_AUTHOR}\n${process.env.AS_REF}\n${process.env.TAG_VERSION} deployed to https://${process.env.ENV}.repairq.io at ${new Date().toGMTString()}`,
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          ENV: sbx-us-cpr
+          TAG_VERSION: 1.18.5.12.CCPR-393.0.10
+        if: always()

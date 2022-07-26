@@ -32,11 +32,9 @@ jobs:
           git commit -m "bump $VERSION"
           git push
 
-      - uses: actions/checkout@v3
+      - uses: everlytic/branch-merge@1.1.2
         with:
-          ref: master
-
-      - name: merge
-        run: |
-          git merge origin/test_split_string --no-edit
-          git push
+          github_token: ${{ github.token }}
+          source_ref: ${{ github.ref }}
+          target_branch: "master"
+          commit_message_template: "[Automated] Merged {source_ref} into target {target_branch}"

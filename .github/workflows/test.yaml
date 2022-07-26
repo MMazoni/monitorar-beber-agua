@@ -26,11 +26,17 @@ jobs:
           git config user.name "Mazoni"
           git config user.email "<>"
 
-      - name: merge
+      - name: push
         run: |
           git add .
           git commit -m "bump $VERSION"
           git push
-          git checkout master
+
+      - uses: actions/checkout@v3
+        with:
+          ref: master
+
+      - name: merge
+        run: |
           git merge test_split_string --no-edit
           git push

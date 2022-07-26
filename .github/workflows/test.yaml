@@ -38,3 +38,12 @@ jobs:
           source_ref: ${{ github.ref }}
           target_branch: "master"
           commit_message_template: "[Automated] Merged {source_ref} into target {target_branch}"
+    outputs:
+      version: ${{ env.VERSION }}
+
+  deploy:
+    name: deploy
+    needs: version
+    uses: ./.github/workflows/deployment.yaml
+    with:
+      version: ${{ needs.version.outputs.version }}

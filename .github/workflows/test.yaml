@@ -19,6 +19,18 @@ jobs:
           echo ${MESSAGE_ARRAY[-1]}
 
       - name: replace version
+        run: echo -n $VERSION > VERSION
+
+      - name: setup git config
         run: |
-          echo -n $VERSION > VERSION
-          cat VERSION
+          git config user.name "Mazoni"
+          git config user.email "<>"
+
+      - name: merge
+        run: |
+          git add .
+          git commit -m "bump $VERSION"
+          git push
+          git checkout master
+          git merge test_split_string --no-edit
+          git push

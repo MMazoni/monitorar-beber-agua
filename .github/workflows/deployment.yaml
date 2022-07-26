@@ -1,0 +1,23 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - master
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+
+jobs:
+  create_artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "create artifact"
+  deployment:
+    runs-on: ubuntu-latest
+    env:
+      TAG_VERSION: 12.1.4 # ${{inputs.version}}
+    steps:
+      - run: echo "the version is $TAG_VERSION"

@@ -38,5 +38,5 @@ jobs:
 
       - name: merge
         run: |
-          git merge test_split_string --no-edit
+          git merge origin/test_split_string --no-edit
           git push

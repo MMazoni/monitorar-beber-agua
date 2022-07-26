@@ -18,6 +18,6 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     env:
-      TAG_VERSION: 12.1.4 # ${{inputs.version}}
+      TAG_VERSION: ${{inputs.version}}
     steps:
       - run: echo "the version is $TAG_VERSION"

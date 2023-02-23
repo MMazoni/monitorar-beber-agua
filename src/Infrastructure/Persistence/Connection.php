@@ -9,14 +9,14 @@ class Connection
 {
     public static function connectDatabase()
     {
-        $servername = "mysql";
-        $port = "3306";
-        $username = "root";
-        $password = "monitoramento";
-        $dbname = "monitoramento_agua";
+        $hostName = $_ENV['MYSQL_HOSTNAME'];
+        $port = $_ENV['MYSQL_PORT'];
+        $username = $_ENV['MYSQL_USERNAME'];
+        $password = $_ENV['MYSQL_PASSWORD'];
+        $databaseName = $_ENV['MYSQL_DATABASE'];
 
         try {
-            $conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password);
+            $conn = new PDO("mysql:host=$hostName;port=$port;dbname=$databaseName", $username, $password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             return $conn;
